@@ -1,12 +1,35 @@
-// import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ReactComponent as ArrowLeft } from "../../assets/icon-arrow-left.svg";
+import { getDocument } from "../../utils/firebase.utils";
 import InvoiceDetailsBtn from "./InvoiceDetailsBtn";
 import InvoiceDetailsDataWrap from "./InvoiceDetailsDataWrap";
 import InvoiceDetailsInfoText from "./InvoiceDetailsInfoText";
-import InvoiceDetailsItemBox from "./InvoiceDetailsItemBox";
+import InvoiceDetailsItem from "./InvoiceDetailsItem";
+
 const InvoiceDetails = () => {
   const { id } = useParams();
+  const [invoice, setInvoice] = useState(null);
+  useEffect(() => {
+    (async () => {
+      setInvoice(await getDocument(id));
+    })();
+  }, [id]);
+
+  if (!invoice) return <h1 style={{ marginTop: "6rem" }}>Loading</h1>;
+
+  const {
+    status,
+    description,
+    senderAddress,
+    clientAddress,
+    createdAt,
+    paymentDue,
+    clientName,
+    clientEmail,
+    items,
+    total,
+  } = invoice;
   return (
     <div className="invoice-data">
       {/* <!-- Go Back --> */}
@@ -18,8 +41,8 @@ const InvoiceDetails = () => {
       {/* <!-- Invoice Detail Btns --> */}
       <div className="invoice-detail-manage">
         <p className="invoice-detail-manage__text">Status</p>
-        <button className="btn invoice-detail-manage__status">
-          <span style={{ marginRight: "0.3rem" }}>&#9679;</span> Pending
+        <button className={`btn invoice__btn invoice__btn--${status}`}>
+          <span style={{ marginRight: "0.3rem" }}>&#9679;</span> {status}
         </button>
         <InvoiceDetailsBtn btnText="Edit" className="edit" />
         <InvoiceDetailsBtn btnText="Delete" className="delete" />
@@ -34,67 +57,64 @@ const InvoiceDetails = () => {
               className="invoice__id-style invoice-info-head-box__id"
               style={{ fontSize: "1.7rem" }}
             >
-              <span>#</span>RT3080
+              <span>#</span>
+              {id}
             </h1>
-            <InvoiceDetailsInfoText text="Graphic Design" />
+            <InvoiceDetailsInfoText text={description} />
           </div>
           <div className="invoice-info-head-box">
-            <InvoiceDetailsInfoText text="19 Union Terrace" />
             <InvoiceDetailsInfoText
               style={{ textAlign: "right" }}
-              text="London"
+              text={senderAddress.street}
             />
             <InvoiceDetailsInfoText
               style={{ textAlign: "right" }}
-              text="E1 3EZ"
+              text={senderAddress.city}
             />
-            <InvoiceDetailsInfoText text="United Kingdom" />
+            <InvoiceDetailsInfoText
+              style={{ textAlign: "right" }}
+              text={senderAddress.postCode}
+            />
+            <InvoiceDetailsInfoText
+              style={{ textAlign: "right" }}
+              text={senderAddress.country}
+            />
           </div>
         </div>
         <div className="invoice-info-details">
           <div className="invoice-info-details-box">
-            <InvoiceDetailsDataWrap heading="21 Aug 2021" text="Invoice Date" />
-            <InvoiceDetailsDataWrap heading="20 Sep 2021" text="Payment Due" />
+            <InvoiceDetailsDataWrap heading={createdAt} text="Invoice Date" />
+            <InvoiceDetailsDataWrap heading={paymentDue} text="Payment Due" />
           </div>
           <div className="invoice-info-details-box">
-            <InvoiceDetailsDataWrap heading="Alex Grim" text="Payment Due" />
+            <InvoiceDetailsDataWrap heading={clientName} text="Payment Due" />
             <div className="invoice-info-details-box__wrap">
-              <InvoiceDetailsInfoText text="84 Church Way" />
-              <InvoiceDetailsInfoText text="Bradford" />
-              <InvoiceDetailsInfoText text="BD1 9PB" />
-              <InvoiceDetailsInfoText text="United Kingdom" />
+              <InvoiceDetailsInfoText text={clientAddress.street} />
+              <InvoiceDetailsInfoText text={clientAddress.city} />
+              <InvoiceDetailsInfoText text={clientAddress.postCode} />
+              <InvoiceDetailsInfoText text={clientAddress.country} />
             </div>
           </div>
           <div className="invoice-info-details-box">
-            <InvoiceDetailsDataWrap
-              heading="alexgrim@mail.com"
-              text="Sent to"
-            />
+            <InvoiceDetailsDataWrap heading={clientEmail} text="Sent to" />
           </div>
         </div>
 
         <div className="invoice-info-wrap-items">
           <div className="invoice-info-item">
             <div className="invoice-info-item-box">
-              <p className="invoice__text-style">Item Name</p>
-              <h1 className="invoice__info-heading">Banner Design</h1>
-              <h1 className="invoice__info-heading">Email Design</h1>
+              <InvoiceDetailsInfoText text="Item Name" />
+              <InvoiceDetailsInfoText text="QTY." />
+              <InvoiceDetailsInfoText text="Price" />
+              <InvoiceDetailsInfoText text="Total" />
             </div>
-            <InvoiceDetailsItemBox title="QTY." bannerInfo="1" emailInfo="2" />
-            <InvoiceDetailsItemBox
-              title="Price"
-              bannerInfo="£ 156.00"
-              emailInfo="£ 200.00"
-            />
-            <InvoiceDetailsItemBox
-              title="Total"
-              bannerInfo="£ 156.00"
-              emailInfo="£ 400.00"
-            />
+            {items.map((item) => (
+              <InvoiceDetailsItem key={item.name} item={item} />
+            ))}
           </div>
           <div className="invoice-info-item-amount">
             <p className="invoice-info-item-amount__amount-text">Amount Due</p>
-            <h1 className="invoice-info-item-amount__amount">£ 556.00</h1>
+            <h1 className="invoice-info-item-amount__amount">£ {total}</h1>
           </div>
         </div>
       </div>

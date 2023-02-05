@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useContext, useState } from "react";
 import { OpenContext } from "../../contexts/OpenContext";
 import { UserContext } from "../../contexts/UserContext";
@@ -9,7 +10,7 @@ import InvoiceFillSelect from "./InvoiceFillSelect";
 
 const InvoiceFillForm = ({ style }) => {
   const [newInvoiceItem, setNewInvoiceItem] = useState([]);
-  const {currentUser} = useContext(UserContext)
+  const { currentUser } = useContext(UserContext);
   const { showForm, setShowForm } = useContext(OpenContext);
   const form = document.querySelector(".invoice-fill");
   const handleShowAddItem = () => {
@@ -18,15 +19,9 @@ const InvoiceFillForm = ({ style }) => {
   const handleDiscard = () => {
     setShowForm(!showForm);
   };
-
-  let paymentDue, status;
-  const handlePaid = () => {
-    paymentDue = new Date().toLocaleString("en-CA").split(",")[0];
-    status = 'paid'
-  };
+  let status = "pending";
   const handleDraft = () => {
-    paymentDue = "no payment yet";
-    status = 'draft'
+    status = "draft";
   };
 
   const getFormData = function (e) {
@@ -67,8 +62,8 @@ const InvoiceFillForm = ({ style }) => {
       userId: currentUser.uid,
       id,
       createdAt: data.date,
-      paymentDue,
       status,
+      paymentDue: "no payment",
       description: data.description,
       paymentTerms,
       clientName: data.clientName,
@@ -88,8 +83,8 @@ const InvoiceFillForm = ({ style }) => {
       items,
       total,
     };
-    addCollectionAndDocs("invoices",invoice)
-    setShowForm(!showForm)
+    addCollectionAndDocs("invoices", invoice);
+    setShowForm(!showForm);
   };
 
   return (
@@ -171,7 +166,7 @@ const InvoiceFillForm = ({ style }) => {
           className="discard"
         />
         <InvoiceFillBtns
-          type={"button"}
+          type={"submit"}
           btnText="Save as Draft"
           className="save-draft"
           handleClick={handleDraft}
@@ -180,7 +175,6 @@ const InvoiceFillForm = ({ style }) => {
           type={"submit"}
           btnText="Save & Send"
           className="save-send"
-          handleClick={handlePaid}
         />
       </div>
     </form>

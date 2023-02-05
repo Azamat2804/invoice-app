@@ -119,11 +119,10 @@
     row-gap: 0.7rem;
   }
 }
-.invoice-info-wrap-items {
-}
+
 .invoice-info-item {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  row-gap: 2rem;
   margin-top: 1rem;
   background-color: rgb(249, 250, 254);
   border-radius: 0.8rem 0.8rem 0 0;
@@ -131,8 +130,9 @@
 }
 .invoice-info-item-box {
   display: grid;
+  grid-template-columns: repeat(4, max-content);
+  justify-content: space-between;
   align-items: center;
-  row-gap: 2rem;
 }
 .invoice-info-item-amount {
   display: flex;

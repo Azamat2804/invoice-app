@@ -8,6 +8,8 @@ import { UserContext } from "./UserContext";
 export const InvoiceDataContext = createContext({
   invoices: [],
   setInvoices: () => null,
+  userInvoices: [],
+  setUserInvoices: () => null,
 });
 
 export const InvoiceDataProvider = ({ children }) => {
@@ -23,9 +25,14 @@ export const InvoiceDataProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    currentUser?.uid && setUserInvoices(invoices[currentUser.uid]);
+    if (currentUser?.uid && invoices) {
+      const validUserInvoices = invoices[currentUser.uid]
+        ? invoices[currentUser.uid]
+        : [];
+      setUserInvoices(validUserInvoices);
+    }
   }, [invoices, currentUser?.uid]);
-
+  
   const value = { userInvoices };
   return (
     <InvoiceDataContext.Provider value={value}>

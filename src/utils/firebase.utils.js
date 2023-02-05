@@ -88,7 +88,6 @@ export const addCollectionAndDocs = async function (
   batch.set(docRef, objectToAdd);
   await batch.commit();
 };
-
 // DOWNLOADING INVOICES FROM DB
 export const getInvoicesAndDocs = async function () {
   const collectionRef = collection(db, "invoices");
@@ -96,25 +95,21 @@ export const getInvoicesAndDocs = async function () {
   const querySnapShot = await getDocs(q);
   const result = querySnapShot.docs.reduce((sum, doc) => {
     const invoice = doc.data();
-
-    if(!sum[invoice.userId]) {
+    if (!sum[invoice.userId]) {
       sum[invoice.userId] = [invoice];
     } else {
-      sum[invoice.userId].push(invoice)
+      sum[invoice.userId].push(invoice);
     }
-
     return sum;
   }, {});
 
-  console.log(result);
+  console.log("Res", result);
 
   return result;
 };
-
-/*
-{
-  uid: {},
-  uid: {},
-  uid: {},
+// Getting single document
+export const getDocument = async function(docName) {
+  const docRef = doc(db,"invoices", docName.toLowerCase())
+  const docSnap = await getDoc(docRef)
+  return docSnap.data()
 }
-*/

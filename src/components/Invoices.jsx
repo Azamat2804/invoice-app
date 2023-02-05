@@ -4,8 +4,7 @@ import EmptyBox from "./EmptyBox";
 import InvoiceItem from "./InvoiceItem";
 
 const Invoices = () => {
-  // const { userInvoices } = useContext(InvoiceDataContext);
-  const userInvoices = []
+  const { userInvoices } = useContext(InvoiceDataContext);
   return (
     <div className="section-invoices">
       {userInvoices.length >= 1 ? (
