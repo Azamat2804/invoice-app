@@ -7,7 +7,7 @@ import FilterStatusForm from "./FilterStatusForm";
 const HeaderButtons = () => {
   const { setShowForm } = useContext(OpenContext);
   const { showFilter, setShowFilter } = useContext(OpenContext);
-  const toggleShowForm = () => setShowForm(true);
+  const toggleShowForm = () => setShowForm('new');
   const toggleShowFilter = () => setShowFilter(!showFilter);
   return (
     <div className="header-buttons">

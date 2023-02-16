@@ -1,10 +1,10 @@
-const FilterStatusOption = ({status}) => {
+const FilterStatusOption = ({ status }) => {
   return (
     <ul className="filter-form__category">
-      <input type="checkbox" />
-      <span>{status}</span>
+      <input name="filter" type="radio" />
+      <span>{status}</span> 
     </ul>
   );
 };
 
-export default FilterStatusOption;
+export default FilterStatusOption; 

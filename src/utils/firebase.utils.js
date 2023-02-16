@@ -103,8 +103,6 @@ export const getInvoicesAndDocs = async function () {
     return sum;
   }, {});
 
-  console.log("Res", result);
-
   return result;
 };
 // Getting single document

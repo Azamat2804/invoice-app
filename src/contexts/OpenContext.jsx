@@ -1,8 +1,8 @@
 import { createContext, useState } from "react";
 
 export const OpenContext = createContext({
-  showForm: false,
-  setShowForm: () => Boolean,
+  showForm: '',
+  setShowForm: (type) => null,
   showFilter: false,
   setShowFilter: () => Boolean,
   showAddItem: false,
@@ -10,7 +10,7 @@ export const OpenContext = createContext({
 });
 
 export const OpenContextProvider = ({ children }) => {
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState('');
   const [showFilter, setShowFilter] = useState(false);
   const [showAddItem, setShowAddItem] = useState(false);
   const value = {

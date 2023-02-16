@@ -9,7 +9,7 @@ const Main = () => {
   const { showForm } = useContext(OpenContext);
   return (
     <main className="container">
-      {showForm && <InvoiceFillForm style={{ transform: "translateX(0)" }} />}
+      {showForm && <InvoiceFillForm type={showForm} style={{ transform: "translateX(0)" }} />}
       {showForm && <Overlay />}
       <Sidebar />
       <Outlet />

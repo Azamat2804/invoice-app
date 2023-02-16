@@ -1,5 +1,6 @@
-import { useEffect } from "react";
+
 import { useContext, useState } from "react";
+import { InvoiceContext } from "../../contexts/InvoiceContext";
 import { OpenContext } from "../../contexts/OpenContext";
 import { UserContext } from "../../contexts/UserContext";
 import { addCollectionAndDocs } from "../../utils/firebase.utils";
@@ -8,16 +9,18 @@ import InvoiceFillBoxInput from "./InvoiceFillBoxInput";
 import InvoiceFillBtns from "./InvoiceFillBtns";
 import InvoiceFillSelect from "./InvoiceFillSelect";
 
-const InvoiceFillForm = ({ style }) => {
+const InvoiceFillForm = ({ style, type }) => {
+  // const {invoice} = useContext(InvoiceContext)
+   console.log(type)
   const [newInvoiceItem, setNewInvoiceItem] = useState([]);
   const { currentUser } = useContext(UserContext);
-  const { showForm, setShowForm } = useContext(OpenContext);
-  const form = document.querySelector(".invoice-fill");
+  const { setShowForm } = useContext(OpenContext);
+  
   const handleShowAddItem = () => {
     setNewInvoiceItem([...newInvoiceItem, newInvoiceItem.length + 1]);
   };
   const handleDiscard = () => {
-    setShowForm(!showForm);
+    setShowForm('');
   };
   let status = "pending";
   const handleDraft = () => {
@@ -26,7 +29,7 @@ const InvoiceFillForm = ({ style }) => {
 
   const getFormData = function (e) {
     e.preventDefault();
-    const invoiceDataArr = [...new FormData(form)];
+    const invoiceDataArr = [...new FormData(e.target)];
     const data = Object.fromEntries(invoiceDataArr);
     const generateId = () => {
       const abs = "abcdefghijklmnopqrstuvwxyz";
@@ -84,7 +87,7 @@ const InvoiceFillForm = ({ style }) => {
       total,
     };
     addCollectionAndDocs("invoices", invoice);
-    setShowForm(!showForm);
+    setShowForm('');
   };
 
   return (

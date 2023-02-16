@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ReactComponent as ArrowLeft } from "../../assets/icon-arrow-left.svg";
+import { InvoiceContext } from "../../contexts/InvoiceContext";
+import { OpenContext } from "../../contexts/OpenContext";
 import { getDocument } from "../../utils/firebase.utils";
 import InvoiceDetailsBtn from "./InvoiceDetailsBtn";
 import InvoiceDetailsDataWrap from "./InvoiceDetailsDataWrap";
@@ -9,12 +11,11 @@ import InvoiceDetailsItem from "./InvoiceDetailsItem";
 
 const InvoiceDetails = () => {
   const { id } = useParams();
-  const [invoice, setInvoice] = useState(null);
+  const { setShowForm } = useContext(OpenContext);
+  const { invoice, getInvoice } = useContext(InvoiceContext);
   useEffect(() => {
-    (async () => {
-      setInvoice(await getDocument(id));
-    })();
-  }, [id]);
+    getInvoice(id);
+  }, [id, getInvoice]);
 
   if (!invoice) return <h1 style={{ marginTop: "6rem" }}>Loading</h1>;
 
@@ -30,6 +31,10 @@ const InvoiceDetails = () => {
     items,
     total,
   } = invoice;
+
+  const handleEdit = () => {
+    setShowForm('edit');
+  };
   return (
     <div className="invoice-data">
       {/* <!-- Go Back --> */}
@@ -44,7 +49,11 @@ const InvoiceDetails = () => {
         <button className={`btn invoice__btn invoice__btn--${status}`}>
           <span style={{ marginRight: "0.3rem" }}>&#9679;</span> {status}
         </button>
-        <InvoiceDetailsBtn btnText="Edit" className="edit" />
+        <InvoiceDetailsBtn
+          handleClick={handleEdit}
+          btnText="Edit"
+          className="edit"
+        />
         <InvoiceDetailsBtn btnText="Delete" className="delete" />
         <InvoiceDetailsBtn btnText="Mark as Paid" className="mark-paid" />
       </div>

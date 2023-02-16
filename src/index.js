@@ -7,6 +7,7 @@ import { BrowserRouter } from "react-router-dom";
 import { OpenContextProvider } from "./contexts/OpenContext";
 import { UserProvider } from "./contexts/UserContext";
 import { InvoiceDataProvider } from "./contexts/InvoiceDataContext";
+import { InvoiceProvider } from "./contexts/InvoiceContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -15,9 +16,11 @@ root.render(
   <BrowserRouter>
     <UserProvider>
       <OpenContextProvider>
-        <InvoiceDataProvider>
-          <App />
-        </InvoiceDataProvider>
+        <InvoiceProvider>
+          <InvoiceDataProvider>
+            <App />
+          </InvoiceDataProvider>
+        </InvoiceProvider>
       </OpenContextProvider>
     </UserProvider>
   </BrowserRouter>
